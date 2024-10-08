@@ -299,7 +299,7 @@ public class replyServlet extends HttpServlet {
                     flag = true;
                     jsonResult.append(",");
                 }
-                
+
             }
             if (jsonResult.length() > 1) {
                 jsonResult.setLength(jsonResult.length() - 1);
