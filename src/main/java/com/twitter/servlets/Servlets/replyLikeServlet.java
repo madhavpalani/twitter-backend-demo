@@ -30,6 +30,7 @@ public class replyLikeServlet extends HttpServlet {
             response.setStatus(400);
             PrintWriter out = response.getWriter();
             out.println("{\"Message\":\"Invalid Username and Password\"}");
+            System.out.println("good");
             return;
         }
         replyLikeModel likeData = mapper.readValue(request.getReader(), replyLikeModel.class);
