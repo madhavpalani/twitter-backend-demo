@@ -189,7 +189,6 @@ public class replyServlet extends HttpServlet {
             }
         }
     }
-
     private boolean insertReplyMentions(Connection connection, HashSet<mentionsModel> mentionsData, int reply_id) {
         String insertMentionsQuery = "INSERT INTO post_mentions (user_id,reply_id,mention_name) VALUES (?,?,?)";
         try (PreparedStatement pt = connection.prepareStatement(insertMentionsQuery)) {
