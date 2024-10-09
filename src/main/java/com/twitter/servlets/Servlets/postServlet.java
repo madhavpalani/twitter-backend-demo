@@ -154,6 +154,7 @@ public class postServlet extends HttpServlet {
         }
     }
 
+
     private boolean insertPostTags(Connection connection, HashSet<tagModel> tagsData, int post_id) {
         String insertPostQuery = "INSERT INTO post_tag (post_id,tag_id) VALUES (?,?)";
         try (PreparedStatement pt = connection.prepareStatement(insertPostQuery)) {
