@@ -209,7 +209,6 @@ public class replyServlet extends HttpServlet {
             return false;
         }
     }
-
     private int getMentionsId(Connection connection, String data) {
         String fetchNameQuery = "SELECT user_id FROM user_details WHERE user_name = ?";
         if (data.startsWith("@")) {
