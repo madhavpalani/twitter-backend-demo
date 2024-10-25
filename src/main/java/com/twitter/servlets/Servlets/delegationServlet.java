@@ -78,18 +78,19 @@ public class delegationServlet extends HttpServlet {
         }
     }
 
-    private boolean checkAlreadyDelegated(Connection connection, int user_id, int del_id){
+    private boolean checkAlreadyDelegated(Connection connection, int user_id, int del_id) {
         String CheckAlreadyDelQuery = "SELECT 1 FROM delegation_table WHERE user_id = ? AND delegated_id = ?";
-        try (PreparedStatement pt = connection.prepareStatement(CheckAlreadyDelQuery)){
-            pt.setInt(1,user_id);
-            pt.setInt(2,del_id);
-            ResultSet rs  = pt.executeQuery();
+        try (PreparedStatement pt = connection.prepareStatement(CheckAlreadyDelQuery)) {
+            pt.setInt(1, user_id);
+            pt.setInt(2, del_id);
+            ResultSet rs = pt.executeQuery();
             return rs.next();
-        } catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             return true;
         }
     }
+
     private boolean checkUserid(Connection connection, int user_id) {
         String CheckUserIdQuery = "SELECT 1 FROM user_details WHERE user_id = ?";
         try (PreparedStatement pt = connection.prepareStatement(CheckUserIdQuery)) {
@@ -185,7 +186,7 @@ public class delegationServlet extends HttpServlet {
                 out.print("{\"message\": \"Invalid username or password.\"}");
                 return;
             }
-            if(!checkUserid(connection,delegated_id)){
+            if (!checkUserid(connection, delegated_id)) {
                 connection.rollback();
                 response.setStatus(404);
                 PrintWriter out = response.getWriter();

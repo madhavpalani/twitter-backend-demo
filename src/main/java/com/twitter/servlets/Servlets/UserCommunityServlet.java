@@ -24,7 +24,7 @@ public class UserCommunityServlet extends HttpServlet {
         ObjectMapper mapper = new ObjectMapper();
         String authHeader = request.getHeader("Authorization");
         List<String> cred = functions.getAuthCredentials(authHeader);
-        if(cred.isEmpty()){
+        if (cred.isEmpty()) {
             response.setStatus(401);
             PrintWriter out = response.getWriter();
             out.print("{\"message\": \"No credentials.\"}");
@@ -35,7 +35,7 @@ public class UserCommunityServlet extends HttpServlet {
         String position = userCommunityModel.getPosition();
 
         try (Connection connection = DBUtil.getConnection()) {
-            int user_id = functions.retrieveUserid1(connection,cred);
+            int user_id = functions.retrieveUserid1(connection, cred);
             if (user_id == -1) {
                 connection.rollback();
                 response.setStatus(401);
@@ -201,7 +201,7 @@ public class UserCommunityServlet extends HttpServlet {
         ObjectMapper mapper = new ObjectMapper();
         String authHeader = request.getHeader("Authorization");
         List<String> cred = functions.getAuthCredentials(authHeader);
-        if(cred.isEmpty()){
+        if (cred.isEmpty()) {
             response.setStatus(401);
             PrintWriter out = response.getWriter();
             out.print("{\"message\": \"No credentials.\"}");
@@ -210,7 +210,7 @@ public class UserCommunityServlet extends HttpServlet {
         int communityId = userCommunityModel.getCommunityId();
         try (Connection connection = DBUtil.getConnection()) {
             connection.setAutoCommit(false);
-            int user_id  = functions.retrieveUserid1(connection,cred);
+            int user_id = functions.retrieveUserid1(connection, cred);
             if (user_id == -1) {
                 connection.rollback();
                 response.setStatus(401);

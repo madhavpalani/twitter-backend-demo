@@ -28,38 +28,38 @@ public class communityUsersServlet extends HttpServlet {
         String authHeader = request.getHeader("Authorization");
         ObjectMapper mapper = new ObjectMapper();
         List<String> cred = functions.getAuthCredentials(authHeader);
-        if(cred.isEmpty()){
+        if (cred.isEmpty()) {
             response.setStatus(400);
             PrintWriter out = response.getWriter();
             out.println("{\"Message\":\"Invalid Username and Password\"}");
             return;
         }
-        communityUsersModel newData = mapper.readValue(request.getReader(),communityUsersModel.class);
+        communityUsersModel newData = mapper.readValue(request.getReader(), communityUsersModel.class);
 
 
         String getCommunityUsersQuery = "SELECT user_name FROM user_details WHERE user_id IN" +
                 "(SELECT user_id FROM community_user WHERE c_id = ?)";
-        try (Connection connection = DBUtil.getConnection()){
+        try (Connection connection = DBUtil.getConnection()) {
             StringBuilder jsonResult = new StringBuilder();
             connection.setAutoCommit(false);
-            int user_id = functions.retrieveUserid1(connection,cred);
-            if(user_id==-1){
+            int user_id = functions.retrieveUserid1(connection, cred);
+            if (user_id == -1) {
                 response.setStatus(400);
                 PrintWriter out = response.getWriter();
                 out.println("{\"Message\":\"Invalid Username and Password\"}");
                 return;
             }
-            int c_id=newData.getCommunityId();
-            if(!checkIDinCommunity(connection, newData.getCommunityId())){
+            int c_id = newData.getCommunityId();
+            if (!checkIDinCommunity(connection, newData.getCommunityId())) {
                 response.setStatus(404);
                 PrintWriter out = response.getWriter();
                 out.println("{\"Message\":\"Community ID not found\"}");
                 return;
             }
             PreparedStatement pt = connection.prepareStatement(getCommunityUsersQuery);
-            pt.setInt(1,c_id);
+            pt.setInt(1, c_id);
             ResultSet rs = pt.executeQuery();
-            while (rs.next()){
+            while (rs.next()) {
                 newData.addUserName(rs.getString(1));
             }
             ObjectWriter writer = new ObjectMapper().writer().withDefaultPrettyPrinter();
@@ -67,20 +67,21 @@ public class communityUsersServlet extends HttpServlet {
             response.setStatus(200);
             response.getWriter().write(jsonResult.toString());
 
-        } catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             response.setStatus(400);
             PrintWriter out = response.getWriter();
             out.println("{\"Message\":\"Connection Error\"}");
         }
     }
-    private boolean checkIDinCommunity(Connection connection, int c_id){
+
+    private boolean checkIDinCommunity(Connection connection, int c_id) {
         String checkIDInCommunity = "SELECT 1 FROM community_table WHERE c_id = ?";
-        try (PreparedStatement pt = connection.prepareStatement(checkIDInCommunity)){
-            pt.setInt(1,c_id);
+        try (PreparedStatement pt = connection.prepareStatement(checkIDInCommunity)) {
+            pt.setInt(1, c_id);
             ResultSet rs = pt.executeQuery();
             return rs.next();
-        } catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }

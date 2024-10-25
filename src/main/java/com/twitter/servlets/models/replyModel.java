@@ -26,7 +26,8 @@ public class replyModel {
     private Integer DelegatedID;
     private HashSet<tagModel> ReplyTags;
     private HashSet<mentionsModel> ReplyMentions;
-    public replyModel(){
+
+    public replyModel() {
         this.ReplyTags = new HashSet<>();
         this.ReplyMentions = new HashSet<>();
     }
@@ -95,13 +96,13 @@ public class replyModel {
         CommunityID = communityID;
     }
 
-    public void addTagID(int tagID){
+    public void addTagID(int tagID) {
         tagModel tags = new tagModel();
         tags.setTagId(tagID);
         ReplyTags.add(tags);
     }
 
-    public void addMentionsName(int mentionID, String mentionName){
+    public void addMentionsName(int mentionID, String mentionName) {
         mentionsModel mentions = new mentionsModel();
         mentions.setMentionId(mentionID);
         mentions.setMentionName(mentionName);

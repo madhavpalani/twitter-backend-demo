@@ -39,9 +39,9 @@ public class userAddDetailsServlet extends HttpServlet {
                 " FROM user_add_details uad JOIN post_table pt ON uad.user_id = pt.user_id " +
                 "WHERE uad.user_id = ? " +
                 "GROUP BY uad.followers_count, uad.following_count, uad.communities_in, uad.tags_followed";
-        try (Connection connection = DBUtil.getConnection()){
+        try (Connection connection = DBUtil.getConnection()) {
             connection.setAutoCommit(false);
-            int user_id = functions.retrieveUserid1(connection,cred);
+            int user_id = functions.retrieveUserid1(connection, cred);
             if (user_id == -1) {
                 connection.rollback();
                 response.setStatus(401);
@@ -50,10 +50,10 @@ public class userAddDetailsServlet extends HttpServlet {
                 return;
             }
             PreparedStatement pt = connection.prepareStatement(userAddDetailsQuery);
-            pt.setInt(1,user_id);
+            pt.setInt(1, user_id);
             ResultSet rs = pt.executeQuery();
             userAddDetailsModel newData = new userAddDetailsModel();
-            while (rs.next()){
+            while (rs.next()) {
 
                 newData.setFollowersCount(rs.getInt("followers_count"));
                 newData.setFollowingCount(rs.getInt("following_count"));
@@ -65,7 +65,7 @@ public class userAddDetailsServlet extends HttpServlet {
             jsonResult.append(writer.writeValueAsString(newData));
             response.getWriter().write(jsonResult.toString());
             response.setStatus(200);
-        } catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             response.setStatus(404);
             PrintWriter out = response.getWriter();

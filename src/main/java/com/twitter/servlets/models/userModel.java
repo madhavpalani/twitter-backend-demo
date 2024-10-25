@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 @JsonPropertyOrder({
         "name",
         "place",
@@ -60,7 +61,7 @@ public class userModel {
     private boolean allowPostsWithGrok = false;
 
     public userModel() {
-        this.accountsConnected=new ArrayList<>();
+        this.accountsConnected = new ArrayList<>();
     }
 
     // Getters and Setters
@@ -256,7 +257,7 @@ public class userModel {
         this.allowPostsWithGrok = allowPostsWithGrok;
     }
 
-    public void addConnectedAccounts(String type_to_connect, String account){
+    public void addConnectedAccounts(String type_to_connect, String account) {
         connectedAccount ca = new connectedAccount();
         ca.setType_to_connect(type_to_connect);
         ca.setAccount(account);

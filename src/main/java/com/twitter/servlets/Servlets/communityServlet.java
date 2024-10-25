@@ -27,13 +27,13 @@ public class communityServlet extends HttpServlet {
         String authHeader = request.getHeader("Authorization");
         List<String> cred = functions.getAuthCredentials(authHeader);
         ObjectMapper mapper = new ObjectMapper();
-        if(cred.isEmpty()){
+        if (cred.isEmpty()) {
             response.setStatus(401);
             PrintWriter out = response.getWriter();
             out.print("{\"message\": \"No credentials.\"}");
             return;
         }
-        if(!request.getMethod().equalsIgnoreCase("put")) {
+        if (!request.getMethod().equalsIgnoreCase("put")) {
             try (Connection connection = DBUtil.getConnection()) {
                 connection.setAutoCommit(false);
                 int user_id = functions.retrieveUserid1(connection, cred);
@@ -67,8 +67,7 @@ public class communityServlet extends HttpServlet {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-        }
-        else if (request.getMethod().equalsIgnoreCase("put")) {
+        } else if (request.getMethod().equalsIgnoreCase("put")) {
             try (Connection connection = DBUtil.getConnection()) {
                 CommunityModel NewCommunity = mapper.readValue(request.getReader(), CommunityModel.class);
                 connection.setAutoCommit(false);
@@ -80,7 +79,7 @@ public class communityServlet extends HttpServlet {
                     out.print("{\"message\": \"Invalid username or password.\"}");
                     return;
                 }
-                if (!(checkCreator(connection, user_id,NewCommunity.getCommunityName()))) {
+                if (!(checkCreator(connection, user_id, NewCommunity.getCommunityName()))) {
                     connection.rollback();
                     response.setStatus(400);
                     response.setContentType("application/json");
@@ -88,14 +87,13 @@ public class communityServlet extends HttpServlet {
                     out.print("{\"message\":\"You are not creator.\"}");
                     return;
                 }
-                if(updateCommunity(connection, NewCommunity)){
+                if (updateCommunity(connection, NewCommunity)) {
                     connection.commit();
                     response.setStatus(200);
                     response.setContentType("application/json");
                     PrintWriter out = response.getWriter();
                     out.print("{\"message\":\"Successfully Updated.\"}");
-                }
-                else{
+                } else {
                     connection.rollback();
                     response.setStatus(400);
                     response.setContentType("application/json");
@@ -134,33 +132,34 @@ public class communityServlet extends HttpServlet {
             return false;
         }
     }
+
     private boolean updateCommunity(Connection connection, CommunityModel NewCommunity) throws SQLException {
         StringBuilder createCommunityQuery = new StringBuilder();
         createCommunityQuery.append("UPDATE community_table SET ");
-        if(NewCommunity.getAbout()==null && NewCommunity.getType()==null){
+        if (NewCommunity.getAbout() == null && NewCommunity.getType() == null) {
             return false;
         }
-        if(!Objects.equals(NewCommunity.getAbout(), "")) {
+        if (!Objects.equals(NewCommunity.getAbout(), "")) {
             createCommunityQuery.append("description = ?, ");
         }
-        if(!Objects.equals(NewCommunity.getType(), "")){
+        if (!Objects.equals(NewCommunity.getType(), "")) {
             createCommunityQuery.append("category = ? ");
         }
         createCommunityQuery.append("WHERE c_id = ? RETURNING c_id");
         int c_id = functions.getCommunityID(connection, NewCommunity.getCommunityName());
-        int x=1;
+        int x = 1;
         try (PreparedStatement pt = connection.prepareStatement(String.valueOf(createCommunityQuery))) {
-            if(NewCommunity.getAbout()==null && NewCommunity.getType()==null){
+            if (NewCommunity.getAbout() == null && NewCommunity.getType() == null) {
                 return false;
             }
-            if(!Objects.equals(NewCommunity.getAbout(), "")) {
+            if (!Objects.equals(NewCommunity.getAbout(), "")) {
                 pt.setString(x++, NewCommunity.getAbout());
             }
-            if(!Objects.equals(NewCommunity.getType(), "")){
+            if (!Objects.equals(NewCommunity.getType(), "")) {
                 pt.setString(x++, NewCommunity.getType());
             }
             pt.setInt(x++, c_id);
-            ResultSet rs =pt.executeQuery();
+            ResultSet rs = pt.executeQuery();
             return rs.next();
         } catch (SQLException e) {
             connection.rollback();
@@ -169,14 +168,14 @@ public class communityServlet extends HttpServlet {
         }
     }
 
-    private boolean checkCreator(Connection connection,int user_id, String communityName){
+    private boolean checkCreator(Connection connection, int user_id, String communityName) {
         String checkCreatorQuery = "SELECT 1 FROM community_table WHERE  creator_id = ? AND c_name = ?";
-        try (PreparedStatement pt = connection.prepareStatement(checkCreatorQuery)){
-            pt.setInt(1,user_id);
-            pt.setString(2,communityName);
+        try (PreparedStatement pt = connection.prepareStatement(checkCreatorQuery)) {
+            pt.setInt(1, user_id);
+            pt.setString(2, communityName);
             ResultSet rs = pt.executeQuery();
             return rs.next();
-        } catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
@@ -199,7 +198,7 @@ public class communityServlet extends HttpServlet {
             throws ServletException, IOException {
         String authHeader = request.getHeader("Authorization");
         List<String> cred = functions.getAuthCredentials(authHeader);
-        if(cred.isEmpty()){
+        if (cred.isEmpty()) {
             response.setStatus(401);
             PrintWriter out = response.getWriter();
             out.print("{\"message\": \"No credentials.\"}");
@@ -208,7 +207,7 @@ public class communityServlet extends HttpServlet {
         response.setContentType("/application/json");
         String temp1;
         try (Connection connection = DBUtil.getConnection()) {
-            int user_id = functions.retrieveUserid1(connection,cred);
+            int user_id = functions.retrieveUserid1(connection, cred);
             if (user_id == -1) {
                 response.setStatus(401);
                 PrintWriter out = response.getWriter();
@@ -264,7 +263,7 @@ public class communityServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        doPost(request,response);
+        doPost(request, response);
     }
 
     @Override
@@ -274,17 +273,17 @@ public class communityServlet extends HttpServlet {
         String name;
         String authHeader = request.getHeader("Authorization");
         List<String> cred = functions.getAuthCredentials(authHeader);
-        if(cred.isEmpty()){
+        if (cred.isEmpty()) {
             response.setStatus(401);
             PrintWriter out = response.getWriter();
             out.print("{\"message\": \"No credentials.\"}");
             return;
         }
         ObjectMapper mapper = new ObjectMapper();
-        CommunityModel newModel =  mapper.readValue(request.getReader(),CommunityModel.class);
+        CommunityModel newModel = mapper.readValue(request.getReader(), CommunityModel.class);
         try (Connection connection = DBUtil.getConnection()) {
             connection.setAutoCommit(false);
-            int user_id = functions.retrieveUserid1(connection,cred);
+            int user_id = functions.retrieveUserid1(connection, cred);
             if (user_id == -1) {
                 response.setStatus(401);
                 PrintWriter out = response.getWriter();
@@ -292,7 +291,7 @@ public class communityServlet extends HttpServlet {
                 return;
             }
             int c_id = functions.getCommunityID(connection, newModel.getCommunityName());
-            if(!checkCommunityOwner(connection,user_id,c_id)){
+            if (!checkCommunityOwner(connection, user_id, c_id)) {
                 response.setStatus(400);
                 response.setContentType("application/json");
                 PrintWriter out = response.getWriter();
@@ -304,7 +303,7 @@ public class communityServlet extends HttpServlet {
                 if (functions.removeCommunityUserData(connection, c_id)) {
                     String deleteCommunityQuery = "DELETE FROM community_table WHERE c_id = ?";
                     PreparedStatement pt = connection.prepareStatement(deleteCommunityQuery);
-                    pt.setInt(1,c_id);
+                    pt.setInt(1, c_id);
                     pt.executeUpdate();
                     connection.commit();
                     response.setStatus(200);
@@ -330,14 +329,14 @@ public class communityServlet extends HttpServlet {
         }
     }
 
-    private boolean checkCommunityOwner(Connection connection, int user_id, int c_id){
+    private boolean checkCommunityOwner(Connection connection, int user_id, int c_id) {
         String checkCommunityOwnerQuery = "SELECT 1 FROM community_table WHERE creator_id = ? AND c_id = ?";
-        try (PreparedStatement pt = connection.prepareStatement(checkCommunityOwnerQuery)){
-            pt.setInt(1,user_id);
-            pt.setInt(2,c_id);
-            ResultSet rs= pt.executeQuery();
+        try (PreparedStatement pt = connection.prepareStatement(checkCommunityOwnerQuery)) {
+            pt.setInt(1, user_id);
+            pt.setInt(2, c_id);
+            ResultSet rs = pt.executeQuery();
             return rs.next();
-        } catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }

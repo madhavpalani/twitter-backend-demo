@@ -10,6 +10,7 @@ public class tagModel {
     public void setTagId(int tagId) {
         this.tagId = tagId;
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o)

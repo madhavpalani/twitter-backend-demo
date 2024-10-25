@@ -45,7 +45,7 @@ public class replyLikeServlet extends HttpServlet {
                 return;
             }
             int reply_id = likeData.getReplyID();
-            if (!checkReply(connection,reply_id)){
+            if (!checkReply(connection, reply_id)) {
                 connection.rollback();
                 connection.close();
                 response.setStatus(401);
@@ -130,13 +130,13 @@ public class replyLikeServlet extends HttpServlet {
         }
     }
 
-    private boolean checkReply(Connection connection, int reply_id){
+    private boolean checkReply(Connection connection, int reply_id) {
         String checkReplyQuery = "SELECT 1 FROM replies_table WHERE reply_id = ?";
-        try (PreparedStatement pt = connection.prepareStatement(checkReplyQuery)){
-            pt.setInt(1,reply_id);
+        try (PreparedStatement pt = connection.prepareStatement(checkReplyQuery)) {
+            pt.setInt(1, reply_id);
             ResultSet rs = pt.executeQuery();
             return rs.next();
-        } catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }

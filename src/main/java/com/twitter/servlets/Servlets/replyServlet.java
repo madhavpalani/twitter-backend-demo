@@ -108,7 +108,7 @@ public class replyServlet extends HttpServlet {
             pt.setInt(1, data.getPostId());
             pt.setString(2, data.getText());
             pt.setInt(3, user_id);
-            if (data.getCommunityID() != null && checkCommunity(connection,data.getCommunityID(),user_id)) {
+            if (data.getCommunityID() != null && checkCommunity(connection, data.getCommunityID(), user_id)) {
                 pt.setInt(4, data.getCommunityID());
             } else {
                 pt.setNull(4, Types.INTEGER);
@@ -129,14 +129,14 @@ public class replyServlet extends HttpServlet {
         }
     }
 
-    private boolean checkCommunity(Connection connection, int communityId, int userId){
+    private boolean checkCommunity(Connection connection, int communityId, int userId) {
         String checkCommunityQuery = "SELECT 1 FROM community_user WHERE c_id = ? AND user_id = ?";
-        try (PreparedStatement pt = connection.prepareStatement(checkCommunityQuery)){
-            pt.setInt(1,communityId);
-            pt.setInt(2,userId);
+        try (PreparedStatement pt = connection.prepareStatement(checkCommunityQuery)) {
+            pt.setInt(1, communityId);
+            pt.setInt(2, userId);
             ResultSet rs = pt.executeQuery();
             return rs.next();
-        } catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
@@ -189,6 +189,7 @@ public class replyServlet extends HttpServlet {
             }
         }
     }
+
     private boolean insertReplyMentions(Connection connection, HashSet<mentionsModel> mentionsData, int reply_id) {
         String insertMentionsQuery = "INSERT INTO post_mentions (user_id,reply_id,mention_name) VALUES (?,?,?)";
         try (PreparedStatement pt = connection.prepareStatement(insertMentionsQuery)) {
@@ -209,6 +210,7 @@ public class replyServlet extends HttpServlet {
             return false;
         }
     }
+
     private int getMentionsId(Connection connection, String data) {
         String fetchNameQuery = "SELECT user_id FROM user_details WHERE user_name = ?";
         if (data.startsWith("@")) {
@@ -311,6 +313,7 @@ public class replyServlet extends HttpServlet {
             e.printStackTrace();
         }
     }
+
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

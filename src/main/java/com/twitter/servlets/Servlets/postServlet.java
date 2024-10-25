@@ -369,7 +369,7 @@ public class postServlet extends HttpServlet {
                     jsonResult.setLength(jsonResult.length() - 1);
                 }
                 jsonResult.append("]");
-                jedis.setex(String.valueOf(user_id),30,jsonResult.toString());
+                jedis.setex(String.valueOf(user_id), 30, jsonResult.toString());
                 response.getWriter().write(jsonResult.toString());
             } catch (SQLException e) {
                 response.setStatus(404);
@@ -485,6 +485,7 @@ public class postServlet extends HttpServlet {
             e.printStackTrace();
         }
     }
+
     public void destroy() {
         if (jedisPool != null) {
             jedisPool.close();

@@ -19,7 +19,8 @@ public class authFilter implements Filter {
 
     // Define a list of endpoints that should be excluded from authentication
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {}
+    public void init(FilterConfig filterConfig) throws ServletException {
+    }
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -47,7 +48,8 @@ public class authFilter implements Filter {
     }
 
     @Override
-    public void destroy() {}
+    public void destroy() {
+    }
 
     private List<String> getAuthCredentials(String authHeader) {
         List<String> auth = new ArrayList<>();
@@ -63,7 +65,7 @@ public class authFilter implements Filter {
     }
 
     private boolean validateUser(List<String> credentials) {
-        try(Connection connection= DBUtil.getConnection()){
+        try (Connection connection = DBUtil.getConnection()) {
             String retrieveIDQuery = "SELECT ua.user_id FROM user_auth ua " +
                     "JOIN user_details ud ON ua.user_id=ud.user_id " +
                     "WHERE ud.user_name = ? AND " +
@@ -77,7 +79,7 @@ public class authFilter implements Filter {
                 e.printStackTrace();
                 return false;
             }
-        } catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }

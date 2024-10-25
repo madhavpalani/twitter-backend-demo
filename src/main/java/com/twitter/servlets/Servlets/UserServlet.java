@@ -205,17 +205,18 @@ public class UserServlet extends HttpServlet {
     }
 
 
-    private void insertUserAdditionalDetails(Connection connection,int user_id) throws SQLException {
+    private void insertUserAdditionalDetails(Connection connection, int user_id) throws SQLException {
         String insertUserAddDetailsQuery = "INSERT INTO user_add_details (user_id) VALUES (?)";
-        try (PreparedStatement pt = connection.prepareStatement(insertUserAddDetailsQuery)){
-            pt.setInt(1,user_id);
+        try (PreparedStatement pt = connection.prepareStatement(insertUserAddDetailsQuery)) {
+            pt.setInt(1, user_id);
             pt.executeUpdate();
-        } catch (SQLException e){
+        } catch (SQLException e) {
             connection.rollback();
             e.printStackTrace();
             System.out.println("OUT1");
         }
     }
+
     private boolean updateUserProfile(Connection connection, int user_id, userModel existingUser)
             throws SQLException {
         connection.setAutoCommit(false);
@@ -642,7 +643,7 @@ public class UserServlet extends HttpServlet {
         response.setContentType("application/json");
         String authHeader = request.getHeader("Authorization");
         List<String> cred = functions.getAuthCredentials(authHeader);
-        if(cred.isEmpty()){
+        if (cred.isEmpty()) {
             response.setStatus(401);
             PrintWriter out = response.getWriter();
             out.print("{\"message\": \"No credentials.\"}");
@@ -652,7 +653,7 @@ public class UserServlet extends HttpServlet {
         String[] table_names = {"user_personalization", "user_privacy", "user_connect", "user_auth", "user_details"};
         try (Connection connection = DBUtil.getConnection()) {
             connection.setAutoCommit(false);
-            int user_id = functions.retrieveUserid1(connection,cred);
+            int user_id = functions.retrieveUserid1(connection, cred);
             if (user_id == -1) {
                 connection.rollback();
                 response.setStatus(401);

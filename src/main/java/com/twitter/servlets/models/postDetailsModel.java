@@ -1,10 +1,12 @@
 package com.twitter.servlets.models;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 @JsonPropertyOrder({
         "text",
         "timestamp",
@@ -22,8 +24,8 @@ public class postDetailsModel {
     private Integer ParentPostId;
     private Integer CommunityId;
     private Integer DelegatedId;
-    private Integer Likes =0;
-    private Integer Reposts =0;
+    private Integer Likes = 0;
+    private Integer Reposts = 0;
     private Timestamp timestamp;
     private HashSet<tagModel> PostTags;
     private HashSet<mentionsModel> PostMentions;
@@ -89,6 +91,7 @@ public class postDetailsModel {
     public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
     }
+
     public void setPostTags(HashSet<tagModel> postTags) {
         PostTags = postTags;
     }
@@ -111,13 +114,13 @@ public class postDetailsModel {
         PostTags.add(tag);
     }
 
-    public void addMentionID(int mentionID){
+    public void addMentionID(int mentionID) {
         mentionsModel mentions = new mentionsModel();
         mentions.setMentionId(mentionID);
         PostMentions.add(mentions);
     }
 
-    public void addMentionNames(String mentionName){
+    public void addMentionNames(String mentionName) {
         mentionsModel mentions = new mentionsModel();
         mentions.setMentionName(mentionName);
         PostMentions.add(mentions);
